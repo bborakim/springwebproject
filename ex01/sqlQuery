@@ -1,0 +1,25 @@
+--tb_board table create SQL
+create table tb1_board(
+	bno INT NOT NULL auto_increment,
+    title VARCHAR(200) NOT NULL,
+    content TEXT NULL,
+    writer VARCHAR(50) NOT NULL,
+    regdate TIMESTAMP NOT NULL DEFAULT now(),
+    viewcnt INT DEFAULT 0,
+    PRIMARY KEY (bno));
+    
+--insert SQL
+    insert into tb1_board(title, content, writer)
+    values('제목입니다.11', '내용입니다.11', 'user011');
+    
+--select SQL
+ select * from tb1_board where bno=1;
+ 
+ --게시물의 전체 목록에 사용하는 SQL
+ select * from tb1_board where bno > 0 order by bno desc;
+ 
+ --게시물의 수정에 사용하는 SQL
+ 	update tb1_board set title='수정된 제목' where bno=1;
+ 
+ -- 게시물의 삭제에 사용하는 SQL
+ delete from tb1_board where bno=1; 
