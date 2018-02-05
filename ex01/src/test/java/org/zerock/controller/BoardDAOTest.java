@@ -1,14 +1,19 @@
 package org.zerock.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.zerock.domain.BoardVo;
+import org.zerock.domain.Criteria;
 import org.zerock.persistence.BoardDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,5 +51,58 @@ public class BoardDAOTest {
 	@Test
 	public void testDelete() throws Exception {
 		dao.delete(1);
+	}
+	
+	@Test
+	public void testListPage()throws Exception {
+		int page = 3;
+		List<BoardVo> list = dao.listPage(page);
+		
+		for (BoardVo boardVo : list) {
+			logger.info(boardVo.getBno() + ":" + boardVo.getTitle());
+		}
+	}
+	
+	@Test
+	public void testListCriteria()throws Exception  {
+		Criteria cri = new Criteria();
+		cri.setPage(2);
+		cri.setPerPageNum(20);
+		
+		List<BoardVo> list = dao.listCriteria(cri);
+		
+		for (BoardVo boardVo : list) {
+			logger.info(boardVo.getBno() + ":" + boardVo.getTitle());
+		}
+	}
+	
+	@Test
+	public void testURI()throws Exception{
+		
+		UriComponents uriComponents = 
+				UriComponentsBuilder.newInstance()
+				.path("/board/read")
+				.queryParam("bno", 12)
+				.queryParam("perPageNum", 20)
+				.build();
+		
+		logger.info("/board/read?bno=12&perPageNume=20");
+		logger.info(uriComponents.toString());
+	}
+	
+	@Test
+	public void testURI2() throws Exception{
+		
+		UriComponents uriComponents = 
+				UriComponentsBuilder.newInstance()
+				.path("/{module}/{page}")
+				.queryParam("bno", 12)
+				.queryParam("perPageNum", 20)
+				.build()
+				.expand("board","read")
+				.encode();
+		
+		logger.info("/board/read?bno=12&perPageNume=20");
+		logger.info(uriComponents.toString());
 	}
 }
